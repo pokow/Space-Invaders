@@ -3,22 +3,22 @@
 
 SPRITES sprites;
 
-ALLEGRO_BITMAP* sprite_grab(int x, int y, int w, int h)
+static ALLEGRO_BITMAP* sprite_grab(int x, int y, int w, int h)
 {
-  ALLEGRO_BITMAP* sprite = al_create_sub_bitmap(sprites._sheet, x, y, w, h);
-  return sprite;
+    return al_create_sub_bitmap(sprites._sheet, x, y, w, h);
 }
 
-void init_sprites ()
+void init_sprites()
 {
   sprites._sheet = al_load_bitmap("spritesheet.bmp");
-  sprites.ship = sprite_grab(0, 0, 12, 13);
-  sprites.ship_shot = sprite_grab(13, 0, 2, 9);
-  sprites.ship_life = sprite_grab(0, 14, 6, 6);
-  sprites.alien = sprite_grab(19, 0, 14, 9);
-  sprites.alien_shot = sprite_grab(13, 10, 4, 4);
-  sprites.boss = sprite_grab(0, 21, 45, 27);
-  sprites.boss_shot = sprite_grab(19, 10, 13, 10);
+
+  sprites.ship        = sprite_grab(0, 0, SHIP_W, SHIP_H);
+  sprites.ship_shot   = sprite_grab(13, 0, SHIP_SHOT_W, SHIP_SHOT_H);
+  sprites.ship_life   = sprite_grab(0, 14, SHIP_LIFE_W, SHIP_LIFE_H);
+  sprites.alien       = sprite_grab(19, 0, ALIEN_W, ALIEN_H);
+  sprites.alien_shot  = sprite_grab(13, 10, ALIEN_SHOT_W, ALIEN_SHOT_H);
+  sprites.boss        = sprite_grab(0, 21, BOSS_W, BOSS_H);
+  sprites.boss_shot   = sprite_grab(19, 10, BOSS_SHOT_W, BOSS_SHOT_H);
 }
 
 void destroy_sprites()
