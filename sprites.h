@@ -1,5 +1,5 @@
-#ifndef SHIP_HEADER
-#define SHIP_HEADER
+#ifndef SPRITES_HEADER
+#define SPRITES_HEADER
 
 #include <allegro5/allegro5.h>
 

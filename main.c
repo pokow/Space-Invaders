@@ -8,6 +8,7 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_image.h>
 
+#include "ship_shot.h"
 #include "general.h"
 #include "display.h"
 #include "sprites.h"
@@ -28,6 +29,7 @@ int main()
   display_init();
   init_sprites();
   init_ship();
+  ship_shot_init();
 
   al_register_event_source(queue, al_get_keyboard_event_source());
   al_register_event_source(queue, al_get_display_event_source(al_get_current_display()));
@@ -50,6 +52,8 @@ int main()
     {
       case ALLEGRO_EVENT_TIMER:
         update_ship();
+        shoot();
+        update_ship_shot();
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
         {
           key[i] &= ~KEY_SEEN;
@@ -75,6 +79,7 @@ int main()
     else if (redraw && al_is_event_queue_empty(queue)) {
       pre_draw_disp();
       al_clear_to_color(al_map_rgb(0, 0, 0)); // fundo preto
+      draw_ship_shot();
       draw_ship();
       pos_draw_disp();
       redraw = false;

@@ -1,5 +1,5 @@
-#ifndef SPRITE_HEADER
-#define SPRITE_HEADER
+#ifndef SHIP_HEADER
+#define SHIP_HEADER
 
 #include "display.h"
 #include "sprites.h"
@@ -11,7 +11,6 @@
 typedef struct 
 {
   int x, y;
-  int can_shoot;
   int lives;
 } SHIP;
 

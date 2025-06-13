@@ -1,1 +1,1 @@
-main.o: main.c general.h display.h sprites.h ship.h
+main.o: main.c ship_shot.h general.h ship.h display.h sprites.h
