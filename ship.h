@@ -15,7 +15,7 @@ typedef struct
   int lives;
 } SHIP;
 
-
+//
 void init_ship();
 void update_ship ();
 void draw_ship ();

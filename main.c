@@ -3,7 +3,7 @@
 //git add.   ---> adiciona todos os arquivos alterados.
 //git commit -m "Descreva aqui o que voce mudou" 
 //git push   ---> envia as mudancas para o github
-
+//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
 
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_image.h>

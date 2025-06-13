@@ -5,15 +5,16 @@ EXEC = jogo
 CC = gcc
 
 # Flags do compilador
-CFLAGS = -Wall -std=c11 -g
+CFLAGS = -Wall -std=c11 -g -MMD
 
 # Arquivos fonte
 SRC = main.c display.c ship.c sprites.c general.c
 
-# Nome dos objetos (.o)
+# Objetos e dependências
 OBJ = $(SRC:.c=.o)
+DEP = $(SRC:.c=.d)
 
-# Flags do Allegro (pegas com `pkg-config`)
+# Flags do Allegro
 ALLEGRO_FLAGS = $(shell pkg-config --cflags --libs allegro-5 allegro_image-5 allegro_font-5 allegro_ttf-5 allegro_primitives-5 allegro_audio-5 allegro_acodec-5 allegro_main-5 allegro_dialog-5)
 
 # Regra padrão
@@ -26,4 +27,7 @@ $(EXEC): $(OBJ)
 	$(CC) $(CFLAGS) -c $< $(ALLEGRO_FLAGS)
 
 clean:
-	rm -f $(OBJ) $(EXEC)
+	rm -f $(OBJ) $(DEP) $(EXEC)
+
+# Incluir arquivos de dependência automaticamente
+-include $(DEP)

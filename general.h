@@ -9,5 +9,6 @@
 extern unsigned char key[ALLEGRO_KEY_MAX];
 
 void key_init ();
+void must_init(bool test, const char *description);
 
 #endif
