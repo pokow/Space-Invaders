@@ -2,6 +2,7 @@
 #define SPRITES_HEADER
 
 #include <allegro5/allegro5.h>
+#include "general.h"
 
 #define SHIP_W 12
 #define SHIP_H 13

@@ -7,11 +7,15 @@ ALLEGRO_BITMAP* buffer;
 void display_init()
 {
   //suavizacao de graficos
+  al_set_new_display_option(ALLEGRO_VSYNC, 0, ALLEGRO_SUGGEST);
   al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
   al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
   //cria display e buffer com as escalas adequadas
+  al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
   display = al_create_display(DISP_W, DISP_H);
+  must_init(display, "display");
   buffer = al_create_bitmap(BUFFER_W, BUFFER_H);
+  must_init(buffer, "buffer");
 }
 
 void pre_draw_disp()

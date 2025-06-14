@@ -5,12 +5,20 @@ SPRITES sprites;
 
 static ALLEGRO_BITMAP* sprite_grab(int x, int y, int w, int h)
 {
-    return al_create_sub_bitmap(sprites._sheet, x, y, w, h);
+  ALLEGRO_BITMAP* sub = al_create_sub_bitmap(sprites._sheet, x, y, w, h);
+  must_init(sub, "sub_bitmap sprites");
+  return sub;
 }
 
 void init_sprites()
 {
-  sprites._sheet = al_load_bitmap("spritesheet.bmp");
+  sprites._sheet = al_load_bitmap("spritesheet.png");
+  int failed_to_load_png = !sprites._sheet;
+  if (failed_to_load_png)
+  {
+    sprites._sheet = al_load_bitmap("spritesheet.bmp");
+  }
+  must_init(sprites._sheet, "spritesheet");
 
   sprites.ship        = sprite_grab(0, 0, SHIP_W, SHIP_H);
   sprites.ship_shot   = sprite_grab(13, 0, SHIP_SHOT_W, SHIP_SHOT_H);

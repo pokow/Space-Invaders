@@ -1,6 +1,7 @@
 #ifndef DISPLAY_HEADER
 #define DISPLAY_HEADER
 #include <allegro5/allegro5.h>
+#include "general.h"
 
 #define BUFFER_W 320
 #define BUFFER_H 240

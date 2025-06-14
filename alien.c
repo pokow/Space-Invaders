@@ -18,49 +18,32 @@ void init_aliens()
   }
 }
 
-ALIEN find_last ()
+ALIEN find_last()
 {
-  ALIEN last;
-  int dir, flag = 0;
-  for (int i = 0; i < ALIEN_ROW && !flag; i ++)
+  ALIEN *last = NULL;
+  for (int i = 0; i < ALIEN_ROW; i++) 
   {
-    for (int j = 0; j < ALIEN_COL && !flag; j ++)
+    for (int j = 0; j < ALIEN_COL; j++) 
     {
-      if (aliens[i][j].alive)
+      if (!aliens[i][j].alive) 
       {
-        last = aliens[i][j];
-        dir = aliens[i][j].dir;
-        flag ++;
+        continue;
+      }
+      int last_is_NULL = !last;
+      if (last_is_NULL)
+      {
+        last = &aliens[i][j];
+        continue;
+      }
+      int aln_to_right_further = aliens[i][j].dir == 1 && aliens[i][j].x > last -> x;
+      int aln_to_left_further = aliens[i][j].dir == -1 && aliens[i][j].x < last -> x;
+      if (last_is_NULL || aln_to_right_further || aln_to_left_further)
+      {
+        last = &aliens[i][j];
       }
     }
   }
-  if (dir == 1)
-  {
-    for (int i = 0; i < ALIEN_ROW; i ++)
-    {
-      for (int j = 0; j < ALIEN_COL; j ++)
-      {
-        if (aliens[i][j].alive && aliens[i][j].x >= last.x)
-        {
-          last = aliens[i][j];
-        }
-      }
-    }
-  }
-  if (dir == -1)
-  {
-    for (int i = 0; i < ALIEN_ROW; i ++)
-    {
-      for (int j = 0; j < ALIEN_COL; j ++)
-      {
-        if (aliens[i][j].alive && aliens[i][j].x <= last.x)
-        {
-          last = aliens[i][j];
-        }
-      }
-    }
-  }
-  return last;
+  return *last;
 }
 
 void update_aliens()

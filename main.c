@@ -18,13 +18,15 @@
 int main()
 {
   // Inicializações básicas
-  al_init();
+  must_init(al_init(), "allegro");
 
-  al_install_keyboard();
+  must_init(al_install_keyboard(), "keyboard");
   al_init_image_addon();
 
   ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60);
+  must_init(timer, "timer");
   ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
+  must_init(queue, "event_queue");
 
   // Inicializa display, sprites, nave
   display_init();
@@ -62,6 +64,7 @@ int main()
           key[i] &= ~KEY_SEEN;
         }
         redraw = true;
+        if (key[ALLEGRO_KEY_ESCAPE]) done = true;
         break;
       case ALLEGRO_EVENT_KEY_DOWN:
         key[ev.keyboard.keycode] = KEY_SEEN | KEY_DOWN;
