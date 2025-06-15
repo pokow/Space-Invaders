@@ -5,14 +5,18 @@
 #include "ship.h"
 #include "display.h"
 #include "sprites.h"
+#include "alien.h"
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_image.h>
+
+#define SHIP_SHOT_SPEED 5
 
 typedef struct
 {
   int x, y;
   int reloaded;
   int exists;
+  HITBOX hitbox;
 } SHIP_SHOT;
 
 void ship_shot_init();

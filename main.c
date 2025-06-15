@@ -14,6 +14,7 @@
 #include "display.h"
 #include "sprites.h"
 #include "ship.h"
+#include "collision.h"
 
 int main()
 {
@@ -25,6 +26,8 @@ int main()
 
   ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60);
   must_init(timer, "timer");
+  ALLEGRO_TIMER* alien_timer = al_create_timer(1.0/2);
+  must_init(alien_timer, "alien_timer");
   ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
   must_init(queue, "event_queue");
 
@@ -38,7 +41,7 @@ int main()
   al_register_event_source(queue, al_get_keyboard_event_source());
   al_register_event_source(queue, al_get_display_event_source(al_get_current_display()));
   al_register_event_source(queue, al_get_timer_event_source(timer));
-
+  al_register_event_source(queue, al_get_timer_event_source(alien_timer));
 
   bool done = false;
   bool redraw = true;
@@ -46,6 +49,7 @@ int main()
   key_init();
 
   al_start_timer(timer);
+  al_start_timer(alien_timer);
 
   while (1)
   {
@@ -55,10 +59,17 @@ int main()
     switch (ev.type)
     {
       case ALLEGRO_EVENT_TIMER:
-        update_ship();
-        update_aliens();
-        shoot();
-        update_ship_shot();
+        if (ev.timer.source == timer)
+        {
+          update_ship();
+          shoot();
+          update_ship_shot();
+          ship_shot_collision(&ship_shot, aliens);
+        }
+        if (ev.timer.source == alien_timer)
+        {
+          update_aliens();
+        }
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
         {
           key[i] &= ~KEY_SEEN;

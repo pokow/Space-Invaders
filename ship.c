@@ -8,21 +8,32 @@ SHIP ship;
 
 void init_ship()
 {
-  ship.x = (BUFFER_W / 2) - (SHIP_W / 2);
-  ship.y = (BUFFER_H - SHIP_H);
+  int x = (BUFFER_W / 2) - (SHIP_W / 2);
+  int y = (BUFFER_H - SHIP_H);
+  ship.x = x;
+  ship.y = y;
   ship.lives = 3;
+  ship.hitbox.x1 = x;
+  ship.hitbox.y1 = y;
+  ship.hitbox.x2 = x + SHIP_W;
+  ship.hitbox.y2 = y + SHIP_H;
 }
 
 void update_ship ()
 {
-  if (key[ALLEGRO_KEY_D]) ship.x ++;
-  if (key[ALLEGRO_KEY_A]) ship.x --;
-
+  if (key[ALLEGRO_KEY_D]) 
+  {
+    ship.x += SHIP_SPEED;
+  }
+  if (key[ALLEGRO_KEY_A])
+  {
+    ship.x -= SHIP_SPEED;
+  }
   if (ship.x < 0) ship.x = 0;
   if (ship.x > SHIP_MAX_X) ship.x = SHIP_MAX_X;
-
+  ship.hitbox.x1 = ship.x;
+  ship.hitbox.x2 = ship.x + SHIP_W;
   //fazer codigo para se colidir com algum tiro, perde vida.
-  //fazer codigo que permite atirar se o can_shoot for verdadeiro.
 }
 
 void draw_ship ()

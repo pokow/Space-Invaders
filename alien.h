@@ -14,13 +14,14 @@
 #define ALIEN_DISTANCE 30
 #define ALIEN_ROW 6
 #define ALIEN_COL 6
-#define ALIEN_SPEED 0.5
+#define ALIEN_SPEED 4
 
 typedef struct
 {
   float x, y;
   int alive;
   int dir; // 1 --> right, -1 --> left
+  HITBOX hitbox;
 } ALIEN;
 
 void init_aliens();

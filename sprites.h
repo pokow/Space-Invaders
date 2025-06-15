@@ -21,7 +21,9 @@
 #define BOSS_SHOT_W 13
 #define BOSS_SHOT_H 10
 
-typedef struct {
+
+typedef struct 
+{
   ALLEGRO_BITMAP* _sheet;
   ALLEGRO_BITMAP* ship;
   ALLEGRO_BITMAP* ship_shot;

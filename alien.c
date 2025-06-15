@@ -8,12 +8,16 @@ void init_aliens()
   {
     for (int j = 0; j < ALIEN_COL; j ++)
     {
-      float alien_x = FIRST_ALIEN_X + ALIEN_DISTANCE * j;
-      float alien_y = FIRST_ALIEN_Y + ALIEN_W * i;
+      int alien_x = FIRST_ALIEN_X + ALIEN_DISTANCE * j;
+      int alien_y = FIRST_ALIEN_Y + ALIEN_W * i;
       aliens[i][j].x = alien_x;
       aliens[i][j].y = alien_y;
       aliens[i][j].alive = 1;
       aliens[i][j].dir = 1;
+      aliens[i][j].hitbox.x1 = alien_x;
+      aliens[i][j].hitbox.y1 = alien_y;
+      aliens[i][j].hitbox.x2 = alien_x + ALIEN_W;
+      aliens[i][j].hitbox.y2 = alien_y + ALIEN_H;
     }
   }
 }
@@ -43,8 +47,14 @@ ALIEN find_last()
       }
     }
   }
+  if (!last)
+  {
+    ALIEN dummy = {0};
+    return dummy;
+  }
   return *last;
 }
+
 
 void update_aliens()
 {
@@ -62,6 +72,8 @@ void update_aliens()
         {
           aliens[i][j].dir *= -1;
           aliens[i][j].y += ALIEN_H;
+          aliens[i][j].hitbox.y1 += ALIEN_H;
+          aliens[i][j].hitbox.y2 += ALIEN_H;
         }
       }
     }
@@ -72,11 +84,12 @@ void update_aliens()
       for (int j = 0; j < ALIEN_COL; j ++)
       {
         aliens[i][j].x += dx;
+        aliens[i][j].hitbox.x1 += dx;
+        aliens[i][j].hitbox.x2 += dx;
       }
     }
   }
 }
-
 
 void draw_aliens()
 {
