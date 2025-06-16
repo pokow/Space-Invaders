@@ -7,6 +7,8 @@
 
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_primitives.h>
 
 #include "alien.h"
 #include "ship_shot.h"
@@ -15,6 +17,7 @@
 #include "sprites.h"
 #include "ship.h"
 #include "collision.h"
+#include "alien_shot.h"
 
 int main()
 {
@@ -23,6 +26,7 @@ int main()
 
   must_init(al_install_keyboard(), "keyboard");
   al_init_image_addon();
+  al_init_primitives_addon();
 
   ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60);
   must_init(timer, "timer");
@@ -30,13 +34,20 @@ int main()
   must_init(alien_timer, "alien_timer");
   ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
   must_init(queue, "event_queue");
+  ALLEGRO_FONT* font = al_create_builtin_font();
+  must_init(font, "font");
+  ALLEGRO_BITMAP* background = al_load_bitmap("space.png");
+  must_init(background, "background");
 
+  int bck_w = al_get_bitmap_width(background);
+  int bck_h = al_get_bitmap_height(background);
   // Inicializa display, sprites, nave
   display_init();
   init_sprites();
   init_ship();
   ship_shot_init();
   init_aliens();
+  alien_shot_init();
 
   al_register_event_source(queue, al_get_keyboard_event_source());
   al_register_event_source(queue, al_get_display_event_source(al_get_current_display()));
@@ -45,6 +56,7 @@ int main()
 
   bool done = false;
   bool redraw = true;
+  long score = 0;
 
   key_init();
 
@@ -64,11 +76,17 @@ int main()
           update_ship();
           shoot();
           update_ship_shot();
-          ship_shot_collision(&ship_shot, aliens);
+          update_alien_shots();
+          if (ship_shot_collision(&ship_shot, aliens))
+          {
+            score ++;
+          }
         }
         if (ev.timer.source == alien_timer)
         {
           update_aliens();
+          define_shooter();
+          aliens_shooting(aliens);
         }
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
         {
@@ -95,10 +113,14 @@ int main()
     // Desenho
     else if (redraw && al_is_event_queue_empty(queue)) {
       pre_draw_disp();
-      al_clear_to_color(al_map_rgb(0, 0, 0)); // fundo preto
+      al_clear_to_color(al_map_rgb(0, 0, 0 )); // limpa fundo
+      al_draw_scaled_bitmap(background, 0, 0, bck_w, bck_h, 0, 0, BUFFER_W, BUFFER_H, 0);
+      al_draw_rectangle(0, 0, BUFFER_W, BUFFER_H, al_map_rgb(0,0,0), 2);
       draw_ship_shot();
       draw_aliens();
+      draw_alien_shots();
       draw_ship();
+      al_draw_textf(font, al_map_rgb_f(1, 1, 1), 5, 5, 0, "%06ld", score);
       pos_draw_disp();
       redraw = false;
     }

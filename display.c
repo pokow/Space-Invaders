@@ -4,16 +4,12 @@
 ALLEGRO_DISPLAY* display;
 ALLEGRO_BITMAP* buffer;
 
-#define WIN_W DISP_W + 50
-#define WIN_H DISP_H + 50
-
 void display_init()
 {
   //suavizacao de graficos
   al_set_new_display_option(ALLEGRO_VSYNC, 0, ALLEGRO_SUGGEST);
   al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
   al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
-
   //descobrir largura e altura do monitor para centralizar janela
   ALLEGRO_MONITOR_INFO info;
   al_get_monitor_info(0, &info);

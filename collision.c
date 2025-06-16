@@ -8,10 +8,10 @@ bool collision (HITBOX hitbox1, HITBOX hitbox2)
   if (hitbox1.y1 > hitbox2.y2) return false;
   return true;
 }
-void ship_shot_collision(SHIP_SHOT *shot, ALIEN aliens[ALIEN_ROW][ALIEN_COL])
+bool ship_shot_collision(SHIP_SHOT *shot, ALIEN aliens[ALIEN_ROW][ALIEN_COL])
 {
   if (!shot->exists)
-    return;
+    return false;
 
   for (int i = 0; i < ALIEN_ROW; i++)
   {
@@ -22,9 +22,10 @@ void ship_shot_collision(SHIP_SHOT *shot, ALIEN aliens[ALIEN_ROW][ALIEN_COL])
         aliens[i][j].alive = 0;
         shot->exists = 0;
         shot->reloaded = 1;
-        return;
+        return true;
       }
     }
   }
+  return false;
 }
 

@@ -9,7 +9,7 @@ SHIP ship;
 void init_ship()
 {
   int x = (BUFFER_W / 2) - (SHIP_W / 2);
-  int y = (BUFFER_H - SHIP_H);
+  int y = (BUFFER_H - SHIP_H) - 4;
   ship.x = x;
   ship.y = y;
   ship.lives = 3;

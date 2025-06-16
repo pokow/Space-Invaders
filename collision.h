@@ -6,6 +6,6 @@
 #include "ship_shot.h"
 
 bool collision (HITBOX hitbox1, HITBOX hitbox2);
-void ship_shot_collision(SHIP_SHOT *shot, ALIEN aliens[ALIEN_ROW][ALIEN_COL]);
+bool ship_shot_collision(SHIP_SHOT *shot, ALIEN aliens[ALIEN_ROW][ALIEN_COL]);
 
 #endif

@@ -7,14 +7,19 @@
 #define SHIP_W 12
 #define SHIP_H 13
 #define SHIP_SHOT_W 2
-#define SHIP_SHOT_H 9 
-#define SHIP_LIFE_W 6
-#define SHIP_LIFE_H 6
+#define SHIP_SHOT_H 11
+#define SHIP_LIFE_W 8
+#define SHIP_LIFE_H 8
 
-#define ALIEN_W 14
-#define ALIEN_H 9
-#define ALIEN_SHOT_W 4
-#define ALIEN_SHOT_H 4
+#define ALIEN_W 16
+#define ALIEN_H 13
+#define ALIEN_FROG_W 16
+#define ALIEN_FROG_H 16
+#define ALIEN_SHOT_W 2
+#define ALIEN_SHOT_H 10
+
+#define EXPLOSION_W 10
+#define EXPLOSION_H 8
 
 #define BOSS_W 45
 #define BOSS_H 27
@@ -28,8 +33,10 @@ typedef struct
   ALLEGRO_BITMAP* ship;
   ALLEGRO_BITMAP* ship_shot;
   ALLEGRO_BITMAP* ship_life;
-  ALLEGRO_BITMAP* alien;
+  ALLEGRO_BITMAP* alien[3];
+  ALLEGRO_BITMAP* alien_frog[3];
   ALLEGRO_BITMAP* alien_shot;
+  ALLEGRO_BITMAP* explosion;
   ALLEGRO_BITMAP* boss;
   ALLEGRO_BITMAP* boss_shot;
 } SPRITES;
