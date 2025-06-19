@@ -16,13 +16,13 @@ void init_sprites()
   int failed_to_load_png = !sprites._sheet;
   if (failed_to_load_png)
   {
-    sprites._sheet = al_load_bitmap("spritesheet.bmp");
+    sprites._sheet = al_load_bitmap("spritesheetnew.bmp");
   }
   must_init(sprites._sheet, "spritesheet");
 
   sprites.ship        = sprite_grab(0, 29, SHIP_W, SHIP_H);
   sprites.ship_shot   = sprite_grab(0, 43, SHIP_SHOT_W, SHIP_SHOT_H);
-  sprites.ship_life   = sprite_grab(49, 0, SHIP_LIFE_W, SHIP_LIFE_H);
+    sprites.ship_life = sprite_grab(49, 0, SHIP_LIFE_W, SHIP_LIFE_H);
   for (int i = 0; i < 3; i ++)
   {
     sprites.alien[i] = sprite_grab(i * ALIEN_W, 0, ALIEN_W, ALIEN_H);
@@ -36,7 +36,6 @@ void init_sprites()
 
 void destroy_sprites()
 {
-  al_destroy_bitmap(sprites._sheet);
   al_destroy_bitmap(sprites.ship);
   al_destroy_bitmap(sprites.ship_shot);
   al_destroy_bitmap(sprites.ship_life);
@@ -48,4 +47,5 @@ void destroy_sprites()
   al_destroy_bitmap(sprites.alien_shot);
   al_destroy_bitmap(sprites.boss);
   al_destroy_bitmap(sprites.boss_shot);
+  al_destroy_bitmap(sprites._sheet);
 }

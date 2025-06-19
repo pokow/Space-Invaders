@@ -8,7 +8,7 @@ CC = gcc
 CFLAGS = -Wall -std=c11 -g
 
 # Arquivos fonte
-SRC = main.c display.c ship.c sprites.c general.c ship_shot.c alien.c collision.c alien_shot.c
+SRC = main.c display.c ship.c sprites.c general.c ship_shot.c alien.c collision.c alien_shot.c dinamic.c boss.c
 
 # Objetos
 OBJ = $(SRC:.c=.o)

@@ -10,13 +10,21 @@
 #include <allegro5/allegro_image.h>
 #include <time.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-#define FIRST_ALIEN_X 50
-#define FIRST_ALIEN_Y 50
+#define FIRST_ALIEN_X 25
+#define FIRST_ALIEN_Y 25
 #define ALIEN_DISTANCE 30
-#define ALIEN_ROW 6
-#define ALIEN_COL 6
-#define ALIEN_SPEED 4
+#define INITIAL_ALIEN_ROW 1
+#define INITIAL_ALIEN_COL 1
+#define INITIAL_ALIEN_SPEED 4
+#define INITIAL_INCREASE_ALIEN_SPEED 0.5
+#define INITIAL_SHOOT_CHANCE 10   // 1/10 de chance
+extern int ALIEN_ROW;
+extern int ALIEN_COL;
+extern int ALIEN_SPEED;
+extern float INCREASE_ALIEN_SPEED; // --> a cada alien morto, seu fps aumenta essa quantia
+extern int SHOOT_CHANCE; // --> quanto menor, maior a chance do alien atirar
 
 typedef struct
 {
@@ -32,12 +40,13 @@ typedef struct
 } ALIEN;
 
 void init_aliens();
+void free_aliens();
 void define_below();
 void define_shooter();
 void draw_aliens();
 ALIEN find_last ();
 void update_aliens();
 
-extern ALIEN aliens[ALIEN_ROW][ALIEN_COL];
+extern ALIEN **aliens;
 
 #endif

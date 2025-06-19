@@ -10,6 +10,7 @@
 #include <allegro5/allegro_image.h>
 
 #define SHIP_SHOT_SPEED 5
+#define COULDOWN 0.75
 
 typedef struct
 {

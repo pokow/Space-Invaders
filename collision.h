@@ -4,8 +4,14 @@
 
 #include "alien.h"
 #include "ship_shot.h"
+#include "alien_shot.h"
+#include "general.h"
+#include "ship.h"
 
 bool collision (HITBOX hitbox1, HITBOX hitbox2);
-bool ship_shot_collision(SHIP_SHOT *shot, ALIEN aliens[ALIEN_ROW][ALIEN_COL]);
+bool shipshot_collided_to_alien();
+bool alienshot_collided_to_ship();
+bool ship_collided_to_alien();
+bool alien_collided_to_ground();
 
 #endif

@@ -18,47 +18,38 @@
 #include "ship.h"
 #include "collision.h"
 #include "alien_shot.h"
+#include "dinamic.h"
+#include "boss.h"
 
 int main()
 {
   // Inicializações básicas
   must_init(al_init(), "allegro");
-
   must_init(al_install_keyboard(), "keyboard");
-  al_init_image_addon();
-  al_init_primitives_addon();
+  must_init(al_init_image_addon(), "image_addon()");
 
-  ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60);
-  must_init(timer, "timer");
-  ALLEGRO_TIMER* alien_timer = al_create_timer(1.0/2);
-  must_init(alien_timer, "alien_timer");
-  ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
-  must_init(queue, "event_queue");
-  ALLEGRO_FONT* font = al_create_builtin_font();
-  must_init(font, "font");
-  ALLEGRO_BITMAP* background = al_load_bitmap("space.png");
-  must_init(background, "background");
-
-  int bck_w = al_get_bitmap_width(background);
-  int bck_h = al_get_bitmap_height(background);
-  // Inicializa display, sprites, nave
   display_init();
-  init_sprites();
-  init_ship();
-  ship_shot_init();
-  init_aliens();
-  alien_shot_init();
+  timers_init();
+  event_queue_init();
+  font_init();
 
-  al_register_event_source(queue, al_get_keyboard_event_source());
-  al_register_event_source(queue, al_get_display_event_source(al_get_current_display()));
-  al_register_event_source(queue, al_get_timer_event_source(timer));
-  al_register_event_source(queue, al_get_timer_event_source(alien_timer));
+  events_register();
+
+  init_sprites();
 
   bool done = false;
+  bool pre_game = true;
+  bool in_game = false;
+  bool pos_game = false;
+  bool game_over = false;
   bool redraw = true;
+
   long score = 0;
 
   key_init();
+
+  start_game();
+  
 
   al_start_timer(timer);
   al_start_timer(alien_timer);
@@ -73,34 +64,44 @@ int main()
       case ALLEGRO_EVENT_TIMER:
         if (ev.timer.source == timer)
         {
+          update_game_state(&pre_game, &in_game, &pos_game, &game_over);
+          define_type_of_phase();
           update_ship();
           shoot();
           update_ship_shot();
-          update_alien_shots();
-          if (ship_shot_collision(&ship_shot, aliens))
+          update_phase();
+          verify_game_over(&game_over);
+          if (normal_phase)
           {
-            score ++;
+            update_alien_shots();
+            alienshot_collided_to_ship();
+            ship_collided_to_alien();
+            alien_collided_to_ground();
+            if (shipshot_collided_to_alien())
+            {
+              score ++;
+            }
           }
         }
         if (ev.timer.source == alien_timer)
         {
-          update_aliens();
-          define_shooter();
-          aliens_shooting(aliens);
+          if (in_game)
+          {
+            if (normal_phase)
+            {
+              update_aliens();
+              define_shooter();
+              aliens_shooting(aliens);
+            }
+          }
         }
-        for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
-        {
-          key[i] &= ~KEY_SEEN;
-        }
+        key_reset();
         redraw = true;
-        if (key[ALLEGRO_KEY_ESCAPE]) done = true;
+        esc_to_quit(&done);
         break;
       case ALLEGRO_EVENT_KEY_DOWN:
-        key[ev.keyboard.keycode] = KEY_SEEN | KEY_DOWN;
-      break;
-
       case ALLEGRO_EVENT_KEY_UP:
-        key[ev.keyboard.keycode] &= ~KEY_DOWN;
+        key_update(&ev);
       break;
 
       case ALLEGRO_EVENT_DISPLAY_CLOSE:
@@ -112,16 +113,31 @@ int main()
 
     // Desenho
     else if (redraw && al_is_event_queue_empty(queue)) {
-      pre_draw_disp();
-      al_clear_to_color(al_map_rgb(0, 0, 0 )); // limpa fundo
-      al_draw_scaled_bitmap(background, 0, 0, bck_w, bck_h, 0, 0, BUFFER_W, BUFFER_H, 0);
-      al_draw_rectangle(0, 0, BUFFER_W, BUFFER_H, al_map_rgb(0,0,0), 2);
-      draw_ship_shot();
-      draw_aliens();
-      draw_alien_shots();
-      draw_ship();
-      al_draw_textf(font, al_map_rgb_f(1, 1, 1), 5, 5, 0, "%06ld", score);
-      pos_draw_disp();
+      if (pre_game == true)
+      {
+        draw_pre_game();
+      }
+      else if (in_game == true)
+      { 
+        pre_draw_disp();
+        draw_ship(); 
+        draw_ship_shot();
+        if (normal_phase)
+        {
+          draw_aliens();
+          draw_alien_shots();
+        }
+        else if (boss_phase)
+        {
+          draw_boss();
+        }
+        al_draw_textf(font, al_map_rgb_f(1, 1, 1), 5, 5, 0, "%06ld", score);
+        pos_draw_disp();
+      }
+      else if (pos_game == true)
+      {
+        draw_pos_game();
+      }
       redraw = false;
     }
   }

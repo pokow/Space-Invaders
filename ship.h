@@ -19,7 +19,9 @@ typedef struct
 //
 void init_ship();
 void update_ship ();
+void verify_game_over(bool* game_over);
 void draw_ship ();
 extern SHIP ship;
+extern int SHIP_LIVES;
 
 #endif

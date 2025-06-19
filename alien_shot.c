@@ -1,15 +1,21 @@
 #include "alien_shot.h"
 
-ALIEN_SHOT alien_shot[ALIEN_COL];
+ALIEN_SHOT *alien_shot;
 
 void alien_shot_init()
 {
+  alien_shot = (ALIEN_SHOT*) malloc (ALIEN_COL * sizeof(ALIEN_SHOT));
   for (int i = 0; i < ALIEN_COL; i ++)
   {
     alien_shot[i].reloaded = 1;
     alien_shot[i].exists = 0;
     alien_shot[i].col = i;
   }
+}
+
+void free_alien_shots()
+{
+  free(alien_shot);
 }
 
 void alien_shoots(ALIEN* alien)
@@ -30,7 +36,7 @@ void alien_shoots(ALIEN* alien)
   }
 }
 
-void aliens_shooting(ALIEN alien[ALIEN_ROW][ALIEN_COL])
+void aliens_shooting(ALIEN** alien)
 {
   for (int i = 0; i < ALIEN_ROW; i++)
   {

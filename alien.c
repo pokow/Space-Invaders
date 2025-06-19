@@ -1,53 +1,61 @@
 #include "alien.h"
 
-ALIEN aliens[ALIEN_ROW][ALIEN_COL];
+int ALIEN_ROW = INITIAL_ALIEN_ROW;
+int ALIEN_COL = INITIAL_ALIEN_COL;
+int ALIEN_SPEED = INITIAL_ALIEN_SPEED;
+float INCREASE_ALIEN_SPEED = INITIAL_INCREASE_ALIEN_SPEED;
+int SHOOT_CHANCE = INITIAL_SHOOT_CHANCE;
+
+ALIEN **aliens;
 
 int alien_frame = 0;
 
 void init_aliens()
 {
   srand(time(NULL));
+  aliens = (ALIEN**) malloc (ALIEN_ROW * sizeof(ALIEN*));
+  for (int i = 0; i < ALIEN_ROW; i ++)
+  {
+    aliens[i] = (ALIEN*) malloc (ALIEN_COL * sizeof(ALIEN));
+  }
   for (int i = 0; i < ALIEN_ROW; i ++)
   {
     for (int j = 0; j < ALIEN_COL; j ++)
     {
+      int alien_x = FIRST_ALIEN_X + ALIEN_DISTANCE * j;
+      int alien_y = FIRST_ALIEN_Y + ALIEN_W * i;
       if ( (i + j) % 2 == 0 )
       {
         //alien normal
         aliens[i][j].type = 1;
-        int alien_x = FIRST_ALIEN_X + ALIEN_DISTANCE * j;
-        int alien_y = FIRST_ALIEN_Y + ALIEN_W * i;
-        aliens[i][j].x = alien_x;
-        aliens[i][j].y = alien_y;
-        aliens[i][j].alive = 1;
-        aliens[i][j].dir = 1;
-        aliens[i][j].hitbox.x1 = alien_x;
-        aliens[i][j].hitbox.y1 = alien_y;
-        aliens[i][j].hitbox.x2 = alien_x + ALIEN_W;
-        aliens[i][j].hitbox.y2 = alien_y + ALIEN_H;
-        aliens[i][j].frame = 0;
-        aliens[i][j].below = 0;
-        aliens[i][j].col = j;
       }
       else {
         //alien frog
         aliens[i][j].type = 2;
-        int alien_x = FIRST_ALIEN_X + ALIEN_DISTANCE * j;
-        int alien_y = FIRST_ALIEN_Y + ALIEN_W * i;
-        aliens[i][j].x = alien_x;
-        aliens[i][j].y = alien_y;
-        aliens[i][j].alive = 1;
-        aliens[i][j].dir = 1;
-        aliens[i][j].hitbox.x1 = alien_x;
-        aliens[i][j].hitbox.y1 = alien_y;
-        aliens[i][j].hitbox.x2 = alien_x + ALIEN_W;
-        aliens[i][j].hitbox.y2 = alien_y + ALIEN_H;
-        aliens[i][j].frame = 0;
-        aliens[i][j].below = 0;
-        aliens[i][j].col = j;
       }
+      aliens[i][j].x = alien_x;
+      aliens[i][j].y = alien_y;
+      aliens[i][j].alive = 1;
+      aliens[i][j].dir = 1;
+      aliens[i][j].hitbox.x1 = alien_x;
+      aliens[i][j].hitbox.y1 = alien_y;
+      aliens[i][j].hitbox.x2 = alien_x + ALIEN_W;
+      aliens[i][j].hitbox.y2 = alien_y + ALIEN_H;
+      aliens[i][j].frame = 0;
+      aliens[i][j].below = 0;
+      aliens[i][j].col = j;
+      aliens[i][j].shoot = 0;
     }
   }
+}
+
+void free_aliens()
+{
+  for (int i = 0; i < ALIEN_ROW; i ++)
+  {
+    free(aliens[i]);
+  }
+  free(aliens);
 }
 
 ALIEN find_last()
@@ -153,7 +161,7 @@ void update_aliens()
 
 void define_shooter()
 {
-  int shoot_chance = rand() % 3;
+  int shoot_chance = rand() % SHOOT_CHANCE;
   ALIEN* candidates[ALIEN_COL];
   int counter = 0;
   for (int i = 0; i < ALIEN_ROW; i ++)

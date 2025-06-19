@@ -3,6 +3,7 @@
 
 ALLEGRO_DISPLAY* display;
 ALLEGRO_BITMAP* buffer;
+ALLEGRO_BITMAP* background;
 
 void display_init()
 {
@@ -24,23 +25,49 @@ void display_init()
   display = al_create_display(WIN_W, WIN_H);
   must_init(display, "display");
   al_set_window_position(display, disp_x, disp_y);
+
   buffer = al_create_bitmap(BUFFER_W, BUFFER_H);
   must_init(buffer, "buffer");
+
+  background = al_load_bitmap("space.bmp");
+  must_init(background, "background");
+}
+
+void draw_pre_game()
+{
+  al_set_target_bitmap(buffer);
+  al_clear_to_color(al_map_rgb(0, 0, 0 )); // limpa fundo
+  al_draw_text(font, al_map_rgb_f(1, 1, 1), 50, 50, 0, "Press Enter to play!");   
+  al_set_target_backbuffer(display);
+  al_draw_scaled_bitmap(buffer, 0, 0, BUFFER_W, BUFFER_H, BUFFER_X, BUFFER_Y, DISP_W, DISP_H, 0);
+  al_flip_display();
 }
 
 void pre_draw_disp()
 {
   // o pre-draw e' o desenho feito primeiro no buffer
   al_set_target_bitmap(buffer);
+  al_clear_to_color(al_map_rgb(0, 0, 0 )); // limpa fundo
+  int bck_w = al_get_bitmap_width(background);
+  int bck_h = al_get_bitmap_height(background);
+  al_draw_scaled_bitmap(background, 0, 0, bck_w, bck_h, 0, 0, BUFFER_W, BUFFER_H, 0);
 }
 
 void pos_draw_disp()
 {
   // o pos-draw e' o redimensionamento do desenho do buffer para o display
   al_set_target_backbuffer(display);
-  int buff_x = (WIN_W - DISP_W)/2;
-  int buff_y = (WIN_H - DISP_H)/2;
-  al_draw_scaled_bitmap(buffer, 0, 0, BUFFER_W, BUFFER_H, buff_x, buff_y, DISP_W, DISP_H, 0);
+  al_draw_scaled_bitmap(buffer, 0, 0, BUFFER_W, BUFFER_H, BUFFER_X, BUFFER_Y, DISP_W, DISP_H, 0);
+  al_flip_display();
+}
+
+void draw_pos_game()
+{
+  al_set_target_bitmap(buffer);
+  al_clear_to_color(al_map_rgb(0, 0, 0 )); // limpa fundo
+  al_draw_text(font, al_map_rgb_f(1, 1, 1), 10, 50, 0, "YOU LOSE! | TAB-->MENU | ENTER-->PLAY");   
+  al_set_target_backbuffer(display);
+  al_draw_scaled_bitmap(buffer, 0, 0, BUFFER_W, BUFFER_H, BUFFER_X, BUFFER_Y, DISP_W, DISP_H, 0);
   al_flip_display();
 }
 
@@ -48,4 +75,5 @@ void destroy_disp_buff()
 {
   al_destroy_bitmap(buffer);
   al_destroy_display(display);
+  al_destroy_bitmap(background);
 }

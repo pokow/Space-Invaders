@@ -2,6 +2,8 @@
 
 SHIP_SHOT ship_shot;
 
+int count_frames = 0;
+
 void ship_shot_init()
 {
   ship_shot.reloaded = 1;
@@ -10,7 +12,7 @@ void ship_shot_init()
 
 void shoot()
 {
-  if (ship_shot.reloaded && key[ALLEGRO_KEY_SPACE])
+  if (ship.lives > 0 && ship_shot.reloaded && key[ALLEGRO_KEY_SPACE])
   {
     float ship_shot_x = ship.x + (SHIP_W / 2.0) - (SHIP_SHOT_W / 2.0);
     ship_shot.x = ship_shot_x;
@@ -18,9 +20,10 @@ void shoot()
     ship_shot.hitbox.x1 = ship_shot_x;
     ship_shot.hitbox.y1 = ship.y;
     ship_shot.hitbox.x2 = ship_shot_x + SHIP_SHOT_W;
-    ship_shot.hitbox.y2 = ship.y + SHIP_SHOT_W;
+    ship_shot.hitbox.y2 = ship.y + SHIP_SHOT_H;
     ship_shot.exists = 1;
     ship_shot.reloaded = 0;
+    count_frames = 0;
   }
 }
 
@@ -31,6 +34,20 @@ void update_ship_shot()
     ship_shot.y -= SHIP_SHOT_SPEED;
     ship_shot.hitbox.y1 -= SHIP_SHOT_SPEED;
     ship_shot.hitbox.y2 -= SHIP_SHOT_SPEED;
+    
+    if (ship_shot.y + SHIP_SHOT_H < 0)
+    {
+      ship_shot.exists = 0;
+    }
+  }
+  if (!ship_shot.reloaded)
+  {
+    count_frames ++;
+    if (count_frames >= FPS * COULDOWN)
+    {
+      ship_shot.reloaded = 1;
+      count_frames = 0;
+    }
   }
 }
 
@@ -42,11 +59,6 @@ void draw_ship_shot()
     int x = ship_shot.x;
     int y = ship_shot.y;
     al_draw_bitmap(sprites.ship_shot, x, y, 0);
-    if (y <= 0)
-    {
-      ship_shot.exists = 0;
-      ship_shot.reloaded = 1;
-    }
   }
 }
 

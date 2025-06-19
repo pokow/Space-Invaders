@@ -7,8 +7,9 @@
 #include "alien.h"
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_image.h>
+#include <stdlib.h>
 
-#define ALIEN_SHOT_SPEED 5
+#define ALIEN_SHOT_SPEED 4
 
 typedef struct
 {
@@ -20,11 +21,12 @@ typedef struct
 } ALIEN_SHOT;
 
 void alien_shot_init();
+void free_alien_shots();
 void alien_shoot(ALIEN* alien);
-void aliens_shooting(ALIEN alien[ALIEN_ROW][ALIEN_COL]);
+void aliens_shooting(ALIEN** alien);
 void update_alien_shots();
 void draw_alien_shots();
 
-extern ALIEN_SHOT alien_shot[ALIEN_COL];
+extern ALIEN_SHOT* alien_shot;
 
 #endif 
