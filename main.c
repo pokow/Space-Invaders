@@ -48,6 +48,7 @@ int main()
   bool game_over = false;
   bool redraw = true;
 
+  reset_difficulty();  
 
   al_start_timer(timer);
   al_start_timer(alien_timer);
@@ -62,10 +63,10 @@ int main()
       case ALLEGRO_EVENT_TIMER:
         if (ev.timer.source == timer)
         {
+          update_game_state(&pre_game, &in_game, &pos_game, &game_over);
           update_phase();
           update_boss_attack_frames();
           update_ship_frames();
-          update_game_state(&pre_game, &in_game, &pos_game, &game_over);
           define_type_of_phase();
           shoot();
           update_ship_shot();

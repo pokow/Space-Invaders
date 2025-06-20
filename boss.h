@@ -6,7 +6,7 @@
 #include "display.h"
 #include "general.h"
 
-#define INITIAL_BOSS_LIVES 25
+#define INITIAL_BOSS_LIVES 5
 #define INITIAL_BOSS_X 40
 #define INITIAL_BOSS_Y 30
 #define BOSS_SPEED 3
