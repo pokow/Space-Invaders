@@ -6,12 +6,17 @@ bool boss_phase = false;
 
 void reset_all()
 {
-  if (!aliens) return;
-  if (!alien_shot) return;
-  free_aliens();
-  free_alien_shots();
-  aliens = NULL;
-  alien_shot = NULL;
+  if (aliens)
+  {
+    free_aliens();
+    aliens = NULL;
+  }
+
+  if (alien_shot)
+  {
+    free_alien_shots();
+    alien_shot = NULL;
+  }
 }
 
 void start_normal_phase()
@@ -36,8 +41,10 @@ void update_game_state(bool* pre_game, bool* in_game, bool* pos_game, bool* game
   {
     *pre_game = false;
     *in_game = true;
+    phase++;
     init_ship();
     init_score();
+    start_normal_phase();
   }
   else if (*in_game && *game_over)
   {
@@ -56,9 +63,10 @@ void update_game_state(bool* pre_game, bool* in_game, bool* pos_game, bool* game
     *pos_game = false;
     *game_over = false;
     reset_difficulty();
+    phase++;
     init_ship();
-    start_normal_phase();
     init_score();
+    start_normal_phase();
   }
 }
 
@@ -114,6 +122,7 @@ void update_phase()
 
   if (normal_phase)
   {
+    if (!aliens) return;
     for (int i = 0; i < ALIEN_ROW; i ++)
     {
       for(int j = 0; j < ALIEN_COL; j ++)
@@ -142,16 +151,16 @@ void update_phase()
   }
 }
 
-
 void define_type_of_phase()
 {
-  if (phase != 0 && phase % 5)
+  if (phase > 0 && phase % 5 == 0)
+  {
+    normal_phase = false;
+    boss_phase = true;
+  }
+  else
   {
     normal_phase = true;
     boss_phase = false;
-  }
-  else {
-    normal_phase = false;
-    boss_phase = true;
   }
 }

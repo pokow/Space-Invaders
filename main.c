@@ -67,7 +67,6 @@ int main()
           update_phase();
           update_boss_attack_frames();
           update_ship_frames();
-          define_type_of_phase();
           shoot();
           update_ship_shot();
           verify_game_over(&game_over);

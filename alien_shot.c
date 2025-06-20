@@ -4,7 +4,15 @@ ALIEN_SHOT *alien_shot;
 
 void alien_shot_init()
 {
-  alien_shot = (ALIEN_SHOT*) malloc (ALIEN_COL * sizeof(ALIEN_SHOT));
+  if (alien_shot) free(alien_shot); 
+
+  alien_shot = malloc(ALIEN_COL * sizeof(ALIEN_SHOT));
+
+  if (!alien_shot) {
+    fprintf(stderr, "Erro ao alocar alien_shot!\n");
+    exit(1);
+  }
+
   for (int i = 0; i < ALIEN_COL; i ++)
   {
     alien_shot[i].reloaded = 1;
@@ -53,6 +61,7 @@ void aliens_shooting(ALIEN** alien)
 
 void update_alien_shots()
 {
+  if (!alien_shot) return;
   for (int i = 0; i < ALIEN_COL; i ++)
   {
     if (alien_shot[i].exists)

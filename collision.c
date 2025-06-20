@@ -33,6 +33,7 @@ void shipshot_collided_to_alien()
 
 void alienshot_collided_to_ship()
 {
+  if (!alien_shot) return;
   for (int i = 0; i < ALIEN_COL; i ++)
   {
     if (alien_shot[i].exists && !ship.invulnerable && collision(ship.hitbox, alien_shot[i].hitbox))
@@ -50,6 +51,7 @@ void alienshot_collided_to_ship()
 
 void ship_collided_to_alien()
 {
+  if (!aliens) return;
   for (int i = 0; i < ALIEN_ROW; i ++)
   {
     for (int j = 0; j < ALIEN_COL; j ++)
@@ -67,6 +69,7 @@ void ship_collided_to_alien()
 
 void alien_collided_to_ground()
 {
+  if (!aliens) return;
   for (int i = 0;i < ALIEN_ROW; i ++)
   {
     for (int j = 0; j < ALIEN_COL; j ++)
