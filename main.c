@@ -32,10 +32,14 @@ int main()
   timers_init();
   event_queue_init();
   font_init();
-
+  primitives_init();
   events_register();
 
   init_sprites();
+  key_init();
+  init_ship();
+  ship_shot_init();
+  init_score();
 
   bool done = false;
   bool pre_game = true;
@@ -44,12 +48,6 @@ int main()
   bool game_over = false;
   bool redraw = true;
 
-  long score = 0;
-
-  key_init();
-
-  start_game();
-  
 
   al_start_timer(timer);
   al_start_timer(alien_timer);
@@ -64,23 +62,29 @@ int main()
       case ALLEGRO_EVENT_TIMER:
         if (ev.timer.source == timer)
         {
+          update_phase();
+          update_boss_attack_frames();
+          update_ship_frames();
           update_game_state(&pre_game, &in_game, &pos_game, &game_over);
           define_type_of_phase();
-          update_ship();
           shoot();
           update_ship_shot();
-          update_phase();
           verify_game_over(&game_over);
           if (normal_phase)
           {
+            update_ship_normal_phase();
             update_alien_shots();
             alienshot_collided_to_ship();
             ship_collided_to_alien();
             alien_collided_to_ground();
-            if (shipshot_collided_to_alien())
-            {
-              score ++;
-            }
+            shipshot_collided_to_alien();
+          }
+          else if (boss_phase)
+          {
+            update_ship_boss_phase();
+            update_boss();
+            shipshot_collided_to_boss();
+            ship_collided_to_boss_attack(); 
           }
         }
         if (ev.timer.source == alien_timer)
@@ -105,6 +109,7 @@ int main()
       break;
 
       case ALLEGRO_EVENT_DISPLAY_CLOSE:
+        current_score = 0;
         done = true;
         break;
     }
@@ -130,8 +135,9 @@ int main()
         else if (boss_phase)
         {
           draw_boss();
+          boss_attack();
         }
-        al_draw_textf(font, al_map_rgb_f(1, 1, 1), 5, 5, 0, "%06ld", score);
+        al_draw_textf(font.in_game_score, al_map_rgb_f(1, 1, 1), 5, 5, 0, "%06d", current_score);
         pos_draw_disp();
       }
       else if (pos_game == true)

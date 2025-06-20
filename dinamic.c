@@ -1,7 +1,7 @@
 #include "dinamic.h"
 
-int phase = 1;
-bool normal_phase = true;
+int phase = 0;
+bool normal_phase = false;
 bool boss_phase = false;
 
 void reset_all()
@@ -12,21 +12,20 @@ void reset_all()
   alien_shot = NULL;
 }
 
-void start_game()
+void start_normal_phase()
 {
-  init_ship();
-  ship_shot_init();
-  if (normal_phase)
-  {
-    FPS_aliens = INITIAL_FPS_aliens;
-    al_set_timer_speed(alien_timer, 1.0/FPS_aliens);
-    init_aliens();
-    alien_shot_init();
-  }
-  else if (boss_phase)
-  {
-    init_boss();
-  }
+  ship.lives = 3;
+  FPS_aliens = INITIAL_FPS_aliens;
+  al_set_timer_speed(alien_timer, 1.0/FPS_aliens);
+  init_aliens();
+  alien_shot_init();
+}
+
+void start_boss_phase()
+{
+  ship.lives = 5;
+  init_boss();
+  init_boss_attacks();
 }
 
 void update_game_state(bool* pre_game, bool* in_game, bool* pos_game, bool* game_over)
@@ -35,7 +34,10 @@ void update_game_state(bool* pre_game, bool* in_game, bool* pos_game, bool* game
   {
     *pre_game = false;
     *in_game = true;
-    start_game();
+    phase ++;
+    init_ship();
+    start_normal_phase();
+    init_score();
   }
   else if (*in_game && *game_over)
   {
@@ -54,39 +56,49 @@ void update_game_state(bool* pre_game, bool* in_game, bool* pos_game, bool* game
     *pos_game = false;
     *game_over = false;
     reset_difficulty();
-    start_game();
+    phase ++;
+    init_ship();
+    start_normal_phase();
+    init_score();
   }
 }
 
 void increase_difficulty()
 {
   reset_all();
-  int hardness_increase = rand() % 3 + 1;
+  if (normal_phase)
+  {
+    int hardness_increase = rand() % 3 + 1;
 
-  if (hardness_increase == 1 && ALIEN_ROW <= 8)
-  {
-    ALIEN_ROW ++;
-  }
-  else if (hardness_increase == 2 && ALIEN_COL <= 6)
-  {
-    ALIEN_COL ++;
-
-  }
-  else
-  {
-    ALIEN_SPEED += 1;
-    INCREASE_ALIEN_SPEED += 0.2;
-    if (SHOOT_CHANCE > 0)
+    if (hardness_increase == 1 && ALIEN_ROW <= 8)
     {
-      SHOOT_CHANCE --; //--> quanto menor, maior a chance
+      ALIEN_ROW ++;
     }
+    else if (hardness_increase == 2 && ALIEN_COL <= 6)
+    {
+      ALIEN_COL ++;
+    }
+    else
+    {
+      ALIEN_SPEED += 1;
+      INCREASE_ALIEN_SPEED += 0.2;
+      if (SHOOT_CHANCE > 0)
+      {
+        SHOOT_CHANCE --; //--> quanto menor, maior a chance
+      }
+    }
+    start_normal_phase();
   }
-  start_game();
+  else if (boss_phase)
+  {
+    start_boss_phase();
+    BOSS_LIVES *= 2;  
+  }
 }
 
 void reset_difficulty()
 {
-  phase = 1;
+  phase = 0;
   FPS_aliens = INITIAL_FPS_aliens;
   al_set_timer_speed(alien_timer, 1.0/FPS_aliens);
   ALIEN_SPEED = INITIAL_ALIEN_SPEED;
@@ -94,11 +106,14 @@ void reset_difficulty()
   ALIEN_COL = INITIAL_ALIEN_COL;
   INCREASE_ALIEN_SPEED = INITIAL_INCREASE_ALIEN_SPEED;
   SHOOT_CHANCE = INITIAL_SHOOT_CHANCE;
+  BOSS_LIVES = INITIAL_BOSS_LIVES;
 }
 
 void update_phase()
 {
   define_type_of_phase();
+
+
   if (normal_phase)
   {
     for (int i = 0; i < ALIEN_ROW; i ++)
@@ -114,12 +129,20 @@ void update_phase()
     phase ++;
     define_type_of_phase();
     increase_difficulty();
+    return;
   }
+  /*else if (boss_phase && boss.lives <= 0)
+  {
+    phase ++;
+    define_type_of_phase();
+    increase_difficulty();
+    return;
+  }*/
 }
 
 void define_type_of_phase()
 {
-  if (phase % 5)
+  if (phase != 0 && phase % 5)
   {
     normal_phase = true;
     boss_phase = false;

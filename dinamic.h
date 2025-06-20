@@ -9,9 +9,11 @@
 #include "sprites.h"
 #include "alien_shot.h"
 #include "boss.h"
+#include "boss_attack.h"
 
 void reset_all();
-void start_game();
+void start_normal_phase();
+void start_boss_phase();
 void update_game_state(bool* pre_game, bool* in_game, bool* pos_game, bool* game_over);
 void increase_difficulty();
 void reset_difficulty();

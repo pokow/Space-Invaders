@@ -4,7 +4,9 @@ float FPS_aliens = INITIAL_FPS_aliens;
 ALLEGRO_TIMER* timer;
 ALLEGRO_TIMER* alien_timer;
 ALLEGRO_EVENT_QUEUE* queue;
-ALLEGRO_FONT* font;
+FONT font;
+int current_score = 0;
+int high_score;
 
 unsigned char key[ALLEGRO_KEY_MAX];
 
@@ -16,9 +18,38 @@ void must_init(bool test, const char *description)
   exit(1);
 }
 
+void init_score()
+{
+  current_score = 0;
+  FILE* score;
+  score = fopen ("score.txt", "r");
+  must_init(score, "score.txt");
+  fscanf(score, "%*s %*d %*s %d", &high_score);
+  fclose(score);
+  score = fopen("score.txt", "w");
+  must_init(score, "score.txt");
+  fprintf(score, "CURRENT_SCORE: %d HIGH_SCORE: %d",current_score, high_score);
+  fclose(score);
+}
+
+void update_score()
+{
+  current_score ++;
+
+  if (current_score > high_score)
+  {
+    high_score = current_score;
+  }
+
+  FILE* score = fopen("score.txt", "w");
+  must_init(score, "score.txt");
+  fprintf(score, "CURRENT_SCORE: %d HIGH_SCORE: %d", current_score, high_score);
+  fclose(score);
+}
 
 void timers_init ()
 {
+  srand(time(NULL));
   timer = al_create_timer(1.0 / FPS);
   must_init(timer, "timer");
   alien_timer = al_create_timer(1.0/FPS_aliens);
@@ -41,8 +72,21 @@ void events_register()
 
 void font_init()
 {
-  font = al_create_builtin_font();
-  must_init(font, "font");
+  font.in_game_score = al_create_builtin_font();
+  must_init(font.in_game_score, "font");
+  font.menu1 = al_create_builtin_font();
+  must_init(font.menu1, "font");
+  font.menu2 = al_create_builtin_font();
+  must_init(font.menu2, "font");
+  font.lose1 = al_create_builtin_font();
+  must_init(font.lose1, "font");
+  font.lose2 = al_create_builtin_font();
+  must_init(font.lose2, "font");
+}
+
+void primitives_init()
+{
+  must_init(al_init_primitives_addon(), "primitives");
 }
 
 void key_init ()
@@ -71,9 +115,14 @@ void esc_to_quit(bool* done)
 {
   if (key[ALLEGRO_KEY_ESCAPE])
   {
+    current_score = 0;
     *done = true;
   }
 }
 
-
+int rand_int(int min, int max)
+{
+  int aux = max - min + 1;
+  return (rand() % aux) + min;
+}
 

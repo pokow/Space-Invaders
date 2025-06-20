@@ -37,7 +37,8 @@ void draw_pre_game()
 {
   al_set_target_bitmap(buffer);
   al_clear_to_color(al_map_rgb(0, 0, 0 )); // limpa fundo
-  al_draw_text(font, al_map_rgb_f(1, 1, 1), 50, 50, 0, "Press Enter to play!");   
+  al_draw_text(font.menu1, al_map_rgb_f(1, 1, 1), 50, 50, 0, "Press Enter to play!");   
+  al_draw_textf(font.menu2, al_map_rgb_f(1, 1, 1), 50, 60, 0, "Current high score: %d", high_score);
   al_set_target_backbuffer(display);
   al_draw_scaled_bitmap(buffer, 0, 0, BUFFER_W, BUFFER_H, BUFFER_X, BUFFER_Y, DISP_W, DISP_H, 0);
   al_flip_display();
@@ -65,7 +66,8 @@ void draw_pos_game()
 {
   al_set_target_bitmap(buffer);
   al_clear_to_color(al_map_rgb(0, 0, 0 )); // limpa fundo
-  al_draw_text(font, al_map_rgb_f(1, 1, 1), 10, 50, 0, "YOU LOSE! | TAB-->MENU | ENTER-->PLAY");   
+  al_draw_text(font.lose1, al_map_rgb_f(1, 1, 1), 10, 50, 0, "YOU LOSE! | TAB-->MENU | ENTER-->PLAY");   
+  al_draw_textf(font.lose2, al_map_rgb_f(1, 1, 1), 10, 60, 0, "YOUR SCORE: %d", current_score);   
   al_set_target_backbuffer(display);
   al_draw_scaled_bitmap(buffer, 0, 0, BUFFER_W, BUFFER_H, BUFFER_X, BUFFER_Y, DISP_W, DISP_H, 0);
   al_flip_display();

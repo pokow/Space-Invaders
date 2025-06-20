@@ -4,6 +4,8 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_primitives.h>
+#include <time.h>
 #include <stdio.h>
 
 #define FPS 60
@@ -18,22 +20,38 @@ typedef struct
   int x2, y2;
 } HITBOX;
 
+typedef struct
+{
+  ALLEGRO_FONT* in_game_score;
+  ALLEGRO_FONT* menu1;
+  ALLEGRO_FONT* menu2;
+  ALLEGRO_FONT* lose1;
+  ALLEGRO_FONT* lose2;
+} FONT;
+
 extern unsigned char key[ALLEGRO_KEY_MAX];
 
 void must_init(bool test, const char *description);
+void init_score();
+void update_score();
 void timers_init ();
 void event_queue_init();
 void events_register();
 void font_init();
+void primitives_init();
 void key_init ();
 void key_update(ALLEGRO_EVENT *ev);
 void key_reset();
 void esc_to_quit(bool* done);
+int rand_int(int min, int max);
+void frames_and_seconds_count();
 
+extern int high_score;
+extern int current_score;
 extern float FPS_aliens;
 extern ALLEGRO_TIMER* timer;
 extern ALLEGRO_TIMER* alien_timer;
 extern ALLEGRO_EVENT_QUEUE* queue;
-extern ALLEGRO_FONT* font;
+extern FONT font;
 
 #endif

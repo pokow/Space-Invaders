@@ -9,10 +9,10 @@ bool collision (HITBOX hitbox1, HITBOX hitbox2)
   return true;
 }
 
-bool shipshot_collided_to_alien()
+void shipshot_collided_to_alien()
 {
   if (!ship_shot.exists)
-    return false;
+    return;
 
   for (int i = 0; i < ALIEN_ROW; i++)
   {
@@ -24,29 +24,31 @@ bool shipshot_collided_to_alien()
         ship_shot.exists = 0;
         FPS_aliens += INCREASE_ALIEN_SPEED;
         al_set_timer_speed(alien_timer, 1.0/FPS_aliens);
-        return true;
+        update_score();
+        return;
       }
     }
   }
-  return false;
 }
 
-bool alienshot_collided_to_ship()
+void alienshot_collided_to_ship()
 {
   for (int i = 0; i < ALIEN_COL; i ++)
   {
-    if (alien_shot[i].exists && collision(ship.hitbox, alien_shot[i].hitbox))
+    if (alien_shot[i].exists && !ship.invulnerable && collision(ship.hitbox, alien_shot[i].hitbox))
     {
       alien_shot[i].exists = 0;
-      ship.lives --;
       alien_shot[i].reloaded = 1;
-      return true;
+      ship.lives --;
+      ship.hitted = true;
+      ship.invulnerable = true;
+      ship_frames = 0;
+      return;
     }
   }
-  return false;
 }
 
-bool ship_collided_to_alien()
+void ship_collided_to_alien()
 {
   for (int i = 0; i < ALIEN_ROW; i ++)
   {
@@ -57,14 +59,13 @@ bool ship_collided_to_alien()
       if (aliens[i][j].alive && ship.lives > 0 && collision(alien_plus, ship.hitbox))
       {
         ship.lives = 0;
-        return true;
+        return;
       }
     }
   }
-  return false;
 }
 
-bool alien_collided_to_ground()
+void alien_collided_to_ground()
 {
   for (int i = 0;i < ALIEN_ROW; i ++)
   {
@@ -73,9 +74,31 @@ bool alien_collided_to_ground()
       if (aliens[i][j].alive &&  aliens[i][j].y + ALIEN_H >= BUFFER_H)
       {
         ship.lives = 0;
-        return true;
+        return;
       }
     }
   }
-  return false;
+}
+
+void shipshot_collided_to_boss()
+{
+  if (!ship_shot.exists)
+    return;
+  if (boss.lives > 0 && collision(boss.hitbox, ship_shot.hitbox))
+  {
+    boss.lives --;
+    ship_shot.exists = 0;
+    return;
+  }
+}
+
+void ship_collided_to_boss_attack()
+{
+  if (!ship.invulnerable && (collision(attack_1.hitbox, ship.hitbox) || collision(attack_2.hitbox, ship.hitbox)))
+  {
+    ship.lives --;
+    ship.hitted = true;
+    ship.invulnerable = true;
+    ship_frames = 0;
+  }
 }

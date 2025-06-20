@@ -7,11 +7,15 @@
 #include "alien_shot.h"
 #include "general.h"
 #include "ship.h"
+#include "boss.h"
+#include "boss_attack.h"
 
 bool collision (HITBOX hitbox1, HITBOX hitbox2);
-bool shipshot_collided_to_alien();
-bool alienshot_collided_to_ship();
-bool ship_collided_to_alien();
-bool alien_collided_to_ground();
+void shipshot_collided_to_alien();
+void alienshot_collided_to_ship();
+void ship_collided_to_alien();
+void alien_collided_to_ground();
+void ship_collided_to_boss_attack();
+void shipshot_collided_to_boss();
 
 #endif

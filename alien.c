@@ -12,7 +12,6 @@ int alien_frame = 0;
 
 void init_aliens()
 {
-  srand(time(NULL));
   aliens = (ALIEN**) malloc (ALIEN_ROW * sizeof(ALIEN*));
   for (int i = 0; i < ALIEN_ROW; i ++)
   {
