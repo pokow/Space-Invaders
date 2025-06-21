@@ -5,6 +5,7 @@ ALLEGRO_TIMER* timer;
 ALLEGRO_TIMER* alien_timer;
 ALLEGRO_EVENT_QUEUE* queue;
 FONT font;
+MUSIC music;
 int current_score = 0;
 int high_score;
 
@@ -32,9 +33,9 @@ void init_score()
   fclose(score);
 }
 
-void update_score()
+void update_score(int add_to_score)
 {
-  current_score ++;
+  current_score += add_to_score;
 
   if (current_score > high_score)
   {
@@ -84,8 +85,53 @@ void font_init()
   must_init(font.lose2, "font");
 }
 
-void primitives_init()
+void music_init()
 {
+  music.current = NULL;
+  music.menu = al_load_audio_stream("Musics/Menu.ogg", 2, 2048);
+  must_init(music.menu, "menu_music");
+  music.normal_phase = al_load_audio_stream("Musics/Normal_phase.ogg", 2, 2048);
+  must_init(music.normal_phase, "normal_phase_music");
+  music.game_over = al_load_audio_stream("Musics/Game_over.ogg", 2, 2048);
+  must_init(music.game_over, "game_over");
+  music.boss_phase = al_load_audio_stream("Musics/Boss_phase.ogg", 2, 2048);
+  must_init(music.boss_phase, "boss_phase");
+  music.shot = al_load_sample("Musics/audio_shot.flac");
+  must_init(music.shot, "shot_sound");
+  music.hit = al_load_sample("Musics/audio_explode1.flac");
+  must_init(music.hit, "hit_sound");
+  music.boss_attack = al_load_sample("Musics/audio_explode2.flac");
+  must_init(music.boss_attack, "audio_explode2");
+}
+
+void restart_all_music_streams()
+{
+  al_seek_audio_stream_secs(music.menu, 0.0);
+  al_seek_audio_stream_secs(music.normal_phase, 0.0);
+  al_seek_audio_stream_secs(music.game_over, 0.0);
+  al_seek_audio_stream_secs(music.boss_phase, 0.0);
+}
+
+void music_destroy()
+{
+  al_detach_audio_stream(music.current);
+  al_destroy_audio_stream(music.menu);
+  al_destroy_audio_stream(music.normal_phase);
+  al_destroy_audio_stream(music.boss_phase);
+  al_destroy_audio_stream(music.game_over);
+  al_destroy_sample(music.shot);
+  al_destroy_sample(music.hit);
+  al_destroy_sample(music.boss_attack);
+}
+
+void allegro_inits()
+{
+  must_init(al_init(), "allegro");
+  must_init(al_install_keyboard(), "keyboard");
+  must_init(al_init_image_addon(), "image_addon()");
+  must_init(al_install_audio(), "audio");
+  must_init(al_init_acodec_addon(), "audio codecs");
+  must_init(al_reserve_samples(16), "reserve samples");
   must_init(al_init_primitives_addon(), "primitives");
 }
 
@@ -115,7 +161,7 @@ void esc_to_quit(bool* done)
 {
   if (key[ALLEGRO_KEY_ESCAPE])
   {
-    current_score = 0;
+    init_score();
     *done = true;
   }
 }
@@ -124,5 +170,20 @@ int rand_int(int min, int max)
 {
   int aux = max - min + 1;
   return (rand() % aux) + min;
+}
+
+void switch_music(ALLEGRO_AUDIO_STREAM* new_music)
+{
+  if (music.current && al_get_audio_stream_attached(music.current)) 
+  {
+      al_detach_audio_stream(music.current);
+  }
+  music.current = new_music;
+  if (music.current) 
+  {
+    al_set_audio_stream_playmode(music.current, ALLEGRO_PLAYMODE_LOOP);
+    al_attach_audio_stream_to_mixer(music.current, al_get_default_mixer());
+    al_set_audio_stream_gain(music.current, 0.2);
+  }
 }
 

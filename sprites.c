@@ -12,11 +12,11 @@ static ALLEGRO_BITMAP* sprite_grab(int x, int y, int w, int h)
 
 void init_sprites()
 {
-  sprites._sheet = al_load_bitmap("spritesheetnew.png");
+  sprites._sheet = al_load_bitmap("spritesheet.png");
   int failed_to_load_png = !sprites._sheet;
   if (failed_to_load_png)
   {
-    sprites._sheet = al_load_bitmap("spritesheetnew.bmp");
+    sprites._sheet = al_load_bitmap("spritesheet.bmp");
   }
   must_init(sprites._sheet, "spritesheet");
 

@@ -41,6 +41,7 @@ void alien_shoots(ALIEN* alien)
     alien_shot[index].hitbox.y2 = alien_shot_y + ALIEN_SHOT_H;
     alien_shot[index].exists = 1;
     alien_shot[index].reloaded = 0;
+    al_play_sample(music.shot, 0.1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);   
   }
 }
 

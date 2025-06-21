@@ -21,7 +21,7 @@ void reset_all()
 
 void start_normal_phase()
 {
-  ship.lives = 3;
+  ship.lives = SHIP_LIVES;
   FPS_aliens = INITIAL_FPS_aliens;
   al_set_timer_speed(alien_timer, 1.0/FPS_aliens);
   init_aliens();
@@ -30,9 +30,11 @@ void start_normal_phase()
 
 void start_boss_phase()
 {
-  ship.lives = 5;
+  ship.lives = SHIP_LIVES + 2;
   init_boss();
   init_boss_attacks();
+  init_boss_shots();
+  switch_music(music.boss_phase);
 }
 
 void update_game_state(bool* pre_game, bool* in_game, bool* pos_game, bool* game_over)
@@ -45,17 +47,21 @@ void update_game_state(bool* pre_game, bool* in_game, bool* pos_game, bool* game
     init_ship();
     init_score();
     start_normal_phase();
+    switch_music(music.normal_phase);
   }
   else if (*in_game && *game_over)
   {
     *in_game = false;
     *pos_game = true;
+    switch_music(music.game_over);
+
   }
   else if (*pos_game && key[ALLEGRO_KEY_TAB])
   {
     *pre_game = true;
     *pos_game = false;
     reset_difficulty();
+    switch_music(music.menu);
   }
   else if (*pos_game && key[ALLEGRO_KEY_ENTER])
   {
@@ -67,6 +73,7 @@ void update_game_state(bool* pre_game, bool* in_game, bool* pos_game, bool* game
     init_ship();
     init_score();
     start_normal_phase();
+    switch_music(music.normal_phase);
   }
 }
 
@@ -75,13 +82,13 @@ void increase_difficulty()
   reset_all();
   if (normal_phase)
   {
-    int hardness_increase = rand() % 3 + 1;
+    int hardness_increase = rand_int(1, 3) ;
 
-    if (hardness_increase == 1 && ALIEN_ROW < 8)
+    if (hardness_increase == 1 && ALIEN_ROW <= 6)
     {
       ALIEN_ROW ++;
     }
-    else if (hardness_increase == 2 && ALIEN_COL < 6)
+    else if (hardness_increase == 2 && ALIEN_COL <= 6)
     {
       ALIEN_COL ++;
     }
@@ -100,6 +107,7 @@ void increase_difficulty()
   {
     start_boss_phase();
     BOSS_LIVES *= 2;
+    BOSS_SHOOT_COULDOWN -= 0.1;
   }
 }
 
@@ -114,6 +122,12 @@ void reset_difficulty()
   INCREASE_ALIEN_SPEED = INITIAL_INCREASE_ALIEN_SPEED;
   SHOOT_CHANCE = INITIAL_SHOOT_CHANCE;
   BOSS_LIVES = INITIAL_BOSS_LIVES;
+  SHIP_LIVES = INITIAL_SHIP_LIVES;
+  SHIP_SPEED = INITIAL_SHIP_SPEED;
+  COULDOWN = INITIAL_COULDOWN;
+  BOSS_SHOOT_COULDOWN = INITIAL_BOSS_SHOOT_COULDOWN;
+  BOSS_ATTACK_COULDOWN = INITIAL_BOSS_ATTACK_COULDOWN;
+  restart_all_music_streams();
 }
 
 void update_phase()
@@ -142,10 +156,15 @@ void update_phase()
   {
     if (boss.lives == 0)
     {
+      update_score(50);
       phase ++;
       define_type_of_phase();
       increase_difficulty();
+      COULDOWN -= 0.1;
+      SHIP_SPEED += 0.075;
+      SHIP_LIVES ++;
       init_ship();
+      switch_music(music.normal_phase);
       return;
     }
   }
@@ -163,4 +182,12 @@ void define_type_of_phase()
     normal_phase = true;
     boss_phase = false;
   }
+}
+
+void update_all_frames()
+{
+  update_ship_shot_frames();
+  update_boss_attack_frames();
+  update_boss_shot_frames();
+  update_ship_frames();
 }

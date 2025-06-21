@@ -5,14 +5,17 @@
 #include <allegro5/allegro_image.h>
 
 SHIP ship;
-int SHIP_LIVES = 3;
+
+int SHIP_LIVES = INITIAL_SHIP_LIVES;
+
+float SHIP_SPEED = INITIAL_SHIP_SPEED;
 
 int ship_frames = 0;
 
 void init_ship()
 {
-  int x = (BUFFER_W / 2) - (SHIP_W / 2);
-  int y = (BUFFER_H - SHIP_H) - 4;
+  float x = (BUFFER_W / 2.0) - (SHIP_W / 2.0);
+  float y = (BUFFER_H - SHIP_H) - 4;
   ship.x = x;
   ship.y = y;
   ship.hitted = false;
@@ -35,8 +38,10 @@ void update_ship_normal_phase ()
     {
       ship.x -= SHIP_SPEED;
     }
+
     if (ship.x < 0) ship.x = 0;
     if (ship.x > SHIP_MAX_X) ship.x = SHIP_MAX_X;
+
     ship.hitbox.x1 = ship.x;
     ship.hitbox.x2 = ship.x + SHIP_W;
   }
@@ -62,8 +67,12 @@ void update_ship_boss_phase ()
     {
       ship.y += SHIP_SPEED;
     }
+
     if (ship.x < 0) ship.x = 0;
     if (ship.x > SHIP_MAX_X) ship.x = SHIP_MAX_X;
+    if (ship.y < 0) ship.y = 0;
+    if (ship.y > SHIP_MAX_Y) ship.y = SHIP_MAX_Y;
+
     ship.hitbox.x1 = ship.x;
     ship.hitbox.x2 = ship.x + SHIP_W;
     ship.hitbox.y1 = ship.y;

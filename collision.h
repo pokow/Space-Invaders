@@ -17,5 +17,7 @@ void ship_collided_to_alien();
 void alien_collided_to_ground();
 void ship_collided_to_boss_attack();
 void shipshot_collided_to_boss();
+void ship_collided_to_boss();
+void bossshot_collided_to_ship();
 
 #endif

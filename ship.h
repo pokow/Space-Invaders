@@ -7,13 +7,20 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_image.h>
 
-#define SHIP_MAX_X BUFFER_W - SHIP_W
-#define SHIP_SPEED 1
+#define SHIP_MAX_X (BUFFER_W - SHIP_W)
+#define SHIP_MAX_Y (BUFFER_H - SHIP_H)
+
+extern float SHIP_SPEED;
+#define INITIAL_SHIP_SPEED 1.0
+
+#define INITIAL_SHIP_LIVES 3
+extern int SHIP_LIVES;
 
 typedef struct 
 {
-  int x, y;
+  float x, y;
   int lives;
+  bool can_shoot;
   bool hitted;
   bool invulnerable;
   HITBOX hitbox;
@@ -27,7 +34,6 @@ void verify_game_over(bool* game_over);
 void update_ship_frames();
 void draw_ship ();
 extern SHIP ship;
-extern int SHIP_LIVES;
 extern int ship_frames;
 
 #endif

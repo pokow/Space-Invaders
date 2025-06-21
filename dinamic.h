@@ -19,6 +19,7 @@ void increase_difficulty();
 void reset_difficulty();
 void update_phase();
 void define_type_of_phase();
+void update_all_frames();
 
 extern int phase;
 extern bool normal_phase;

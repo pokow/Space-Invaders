@@ -1,9 +1,3 @@
-//Para salvar no github:
-
-//git add.   ---> adiciona todos os arquivos alterados.
-//git commit -m "Descreva aqui o que voce mudou" 
-//git push   ---> envia as mudancas para o github
-//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
 
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_image.h>
@@ -23,16 +17,13 @@
 
 int main()
 {
-  // Inicializações básicas
-  must_init(al_init(), "allegro");
-  must_init(al_install_keyboard(), "keyboard");
-  must_init(al_init_image_addon(), "image_addon()");
+  allegro_inits();
 
   display_init();
   timers_init();
   event_queue_init();
   font_init();
-  primitives_init();
+  music_init();
   events_register();
 
   init_sprites();
@@ -50,6 +41,7 @@ int main()
 
   reset_difficulty();  
 
+  switch_music(music.menu);
   al_start_timer(timer);
   al_start_timer(alien_timer);
 
@@ -64,27 +56,33 @@ int main()
         if (ev.timer.source == timer)
         {
           update_game_state(&pre_game, &in_game, &pos_game, &game_over);
-          update_phase();
-          update_boss_attack_frames();
-          update_ship_frames();
-          shoot();
-          update_ship_shot();
-          verify_game_over(&game_over);
-          if (normal_phase)
+          if (in_game)
           {
-            update_ship_normal_phase();
-            update_alien_shots();
-            alienshot_collided_to_ship();
-            ship_collided_to_alien();
-            alien_collided_to_ground();
-            shipshot_collided_to_alien();
-          }
-          else if (boss_phase)
-          {
-            update_ship_boss_phase();
-            update_boss();
-            shipshot_collided_to_boss();
-            ship_collided_to_boss_attack(); 
+            update_phase();
+            update_all_frames();
+            ship_shoots();
+            update_ship_shot();
+            verify_game_over(&game_over);
+            if (normal_phase)
+            {
+              update_ship_normal_phase();
+              update_alien_shots();
+              alienshot_collided_to_ship();
+              ship_collided_to_alien();
+              alien_collided_to_ground();
+              shipshot_collided_to_alien();
+            }
+            else if (boss_phase)
+            {
+              boss_shoots();
+              update_boss_shots();
+              update_ship_boss_phase();
+              update_boss();
+              shipshot_collided_to_boss();
+              ship_collided_to_boss_attack(); 
+              ship_collided_to_boss();
+              bossshot_collided_to_ship();
+            }
           }
         }
         if (ev.timer.source == alien_timer)
@@ -109,7 +107,7 @@ int main()
       break;
 
       case ALLEGRO_EVENT_DISPLAY_CLOSE:
-        current_score = 0;
+        init_score();
         done = true;
         break;
     }
@@ -135,6 +133,7 @@ int main()
         else if (boss_phase)
         {
           draw_boss();
+          draw_boss_shots();
           boss_attack();
         }
         al_draw_textf(font.in_game_score, al_map_rgb_f(1, 1, 1), 5, 5, 0, "%06d", current_score);
@@ -149,6 +148,7 @@ int main()
   }
 
   // Libera recursos
+  music_destroy();
   destroy_sprites();
   destroy_disp_buff();
   al_destroy_timer(timer);

@@ -9,8 +9,11 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_image.h>
 
+#define MAX_BULLETS 6
+
 #define SHIP_SHOT_SPEED 5
-#define COULDOWN 0.75
+extern float COULDOWN;
+#define INITIAL_COULDOWN 0.7
 
 typedef struct
 {
@@ -20,11 +23,13 @@ typedef struct
   HITBOX hitbox;
 } SHIP_SHOT;
 
+void update_ship_shot_frames();
 void ship_shot_init();
-void shoot();
+void ship_shoots();
 void update_ship_shot();
 void draw_ship_shot();
 
-extern SHIP_SHOT ship_shot;
+extern SHIP_SHOT ship_shot[MAX_BULLETS];
+extern int ship_shot_frames;
 
 #endif 
