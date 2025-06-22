@@ -84,11 +84,11 @@ void increase_difficulty()
   {
     int hardness_increase = rand_int(1, 3) ;
 
-    if (hardness_increase == 1 && ALIEN_ROW <= 6)
+    if (hardness_increase == 1 && ALIEN_ROW < 6)
     {
       ALIEN_ROW ++;
     }
-    else if (hardness_increase == 2 && ALIEN_COL <= 6)
+    else if (hardness_increase == 2 && ALIEN_COL < 6)
     {
       ALIEN_COL ++;
     }
@@ -105,6 +105,7 @@ void increase_difficulty()
   }
   else if (boss_phase)
   {
+    boss_shot_frames = 0;
     start_boss_phase();
     BOSS_LIVES *= 2;
     BOSS_SHOOT_COULDOWN -= 0.1;
@@ -160,8 +161,8 @@ void update_phase()
       phase ++;
       define_type_of_phase();
       increase_difficulty();
-      COULDOWN -= 0.1;
-      SHIP_SPEED += 0.075;
+      COULDOWN -= 0.15;
+      SHIP_SPEED += 0.1;
       SHIP_LIVES ++;
       init_ship();
       switch_music(music.normal_phase);
