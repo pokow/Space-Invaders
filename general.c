@@ -88,20 +88,20 @@ void font_init()
 void music_init()
 {
   music.current = NULL;
-  music.menu = al_load_audio_stream("Musics/Menu.ogg", 2, 2048);
-  must_init(music.menu, "menu_music");
-  music.normal_phase = al_load_audio_stream("Musics/Normal_phase.ogg", 2, 2048);
-  must_init(music.normal_phase, "normal_phase_music");
-  music.game_over = al_load_audio_stream("Musics/Game_over.ogg", 2, 2048);
-  must_init(music.game_over, "game_over");
-  music.boss_phase = al_load_audio_stream("Musics/Boss_phase.ogg", 2, 2048);
-  must_init(music.boss_phase, "boss_phase");
-  music.shot = al_load_sample("Musics/audio_shot.flac");
-  must_init(music.shot, "shot_sound");
-  music.hit = al_load_sample("Musics/audio_explode1.flac");
-  must_init(music.hit, "hit_sound");
-  music.boss_attack = al_load_sample("Musics/audio_explode2.flac");
-  must_init(music.boss_attack, "audio_explode2");
+  music.menu = al_load_audio_stream("Sounds/Menu.ogg", 2, 2048);
+  must_init(music.menu, "Menu_music");
+  music.normal_phase = al_load_audio_stream("Sounds/Normal_phase.ogg", 2, 2048);
+  must_init(music.normal_phase, "Normal_phase_music");
+  music.game_over = al_load_audio_stream("Sounds/Game_over.ogg", 2, 2048);
+  must_init(music.game_over, "Game_over_sound");
+  music.boss_phase = al_load_audio_stream("Sounds/Boss_phase.ogg", 2, 2048);
+  must_init(music.boss_phase, "Boss_phase_sound");
+  music.shot = al_load_sample("Sounds/Audio_shot.flac");
+  must_init(music.shot, "Shot_sound");
+  music.hit = al_load_sample("Sounds/Hit.flac");
+  must_init(music.hit, "Hit_sound");
+  music.boss_attack = al_load_sample("Sounds/Boss_attack.flac");
+  must_init(music.boss_attack, "Boss_attack_sound");
 }
 
 void restart_all_music_streams()

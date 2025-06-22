@@ -29,7 +29,12 @@ void display_init()
   buffer = al_create_bitmap(BUFFER_W, BUFFER_H);
   must_init(buffer, "buffer");
 
-  background = al_load_bitmap("space.bmp");
+  background = al_load_bitmap("Images/space.png");
+  int failed_to_load_png = !background;
+  if (failed_to_load_png)
+  {
+    background = al_load_bitmap("Images/space.bmp");
+  }
   must_init(background, "background");
 }
 
