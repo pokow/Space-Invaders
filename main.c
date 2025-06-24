@@ -132,9 +132,9 @@ int main()
         }
         else if (boss_phase)
         {
-          boss_attack();
           draw_boss();
           draw_boss_shots();
+          boss_attack();
         }
         al_draw_textf(font.in_game_score, al_map_rgb_f(1, 1, 1), 5, 5, 0, "%06d", current_score);
         pos_draw_disp();
